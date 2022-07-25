@@ -49,13 +49,19 @@ Right now, you can only run pdref from source. You can create a conda environmen
 - There's no clear-cut rule for size-based filtering images in a PDF, since resolution and image size may vary from one source to another. As a result, you might end up with watermarks or other images you don't want. You can simply delete those images from the notes folder, and everything else should work fine. Alternatively, if you find that some images _aren't_ included, you can always manually save them to the notes folder and reference them in _index.md or wherever else you'd like.
 - When processing highlights, you might get more than what you bargained for. This can be deleted in the output.
 
-# Future features
+# Possible future features
 
-- [] Extract text box annotations
-- [] Keep track of dates and update notes only if source PDF has an altered timestamp more recent than the last run of pdref
-- [] Option to filter images by size (GUI input)
-- [] Option to force image extraction (GUI input)
-- [] Save source and destination folder locations (GUI)
-- [] Save notes author name (GUI input)
-- [] Don't indicate "No annotations"
-- [] Update PyMuPDF usage
+- [x] Don't indicate "No annotations"
+- [x] Process only references modified after specified date (GUI input)
+- [ ] Keep track of dates and update notes only if source PDF has an altered timestamp more recent than the last run of pdref
+- [ ] Extract text box annotations
+- [ ] Take images from within specified bounds (e.g. don't take images from outer 1" margins)
+- [ ] Option to filter images by size (GUI input)
+- [ ] Option to compare images to reference directory for exclusion
+- [ ] Option to force image extraction (GUI input)
+- [ ] Save source and destination folder locations (GUI)
+- [ ] Save notes author name (GUI input)
+- [ ] Update PyMuPDF usage
+
+# Issues
+PyMuPDF 1296 (from an earlier version; running macOS Sierra 10.12.6)

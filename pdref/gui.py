@@ -32,6 +32,7 @@ def run():
     # Check file input
     refs_path = entry_refs.get()
     notes_path = entry_notes.get()
+    earliest_modified_date = entry_date.get()
 
     if (not refs_path):
         msg = 'Note:\n Please select a folder to look for references'
@@ -47,7 +48,7 @@ def run():
         # Run
         bar_status.config(text = "Running...")
         root.update()
-        crawl(pdfs_path=refs_path, notes_path=notes_path)
+        crawl(pdfs_path=refs_path, notes_path=notes_path, earliest_modified_date=earliest_modified_date)
         bar_status.config(text = "Done!")
         show_output()
         return
@@ -56,7 +57,7 @@ if __name__ == '__main__':
     # Set up window
     root = tk.Tk()
     root.title('pdref')
-    root.geometry('300x160+200+200')
+    root.geometry('300x210+200+200')
     root.minsize(200, 160)
     root.columnconfigure(0,weight=1)
     
@@ -64,6 +65,10 @@ if __name__ == '__main__':
     frame_paths = tk.Frame(root)
     frame_paths.grid(sticky = tk.EW)
     frame_paths.columnconfigure(1, weight=1)
+
+    # frame_date = tk.Frame(root)
+    # frame_date.grid(sticky=tk.EW)
+    # frame_date.columnconfigure(1, weight=1)
 
     frame_run = tk.Frame(root)
     frame_run.grid(sticky=tk.EW)
@@ -90,6 +95,13 @@ if __name__ == '__main__':
     entry_notes = tk.Entry(frame_paths)
     button_notes.grid(row = 1, column = 0, padx=5, pady=5, sticky=tk.EW)
     entry_notes.grid(row=1, column=1, padx = 5, pady=5, sticky=tk.EW)
+
+    label_date = tk.Label(frame_paths, text = "Notes since:")
+    label_date.grid(row = 2, column = 0, padx=5, pady=5, sticky=tk.EW)
+    label_date = tk.Label(frame_paths, text = "Format: YYYY-MM-DD")
+    label_date.grid(row = 3, column = 1, sticky=tk.EW)
+    entry_date = tk.Entry(frame_paths)
+    entry_date.grid(row=2, column=1, padx = 5, pady=5, sticky=tk.EW)
 
     # Run options
     button_run = tk.Button(frame_run, text = 'Run', command = run, padx=10, pady=10)

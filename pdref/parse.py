@@ -314,9 +314,6 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None)
 
         for index, page in enumerate(pages, start=1):
 
-            # Indicate page number
-            f.write("\n## Page {}\n".format(index))
-
             text_words = page.getTextWords()
         #   print(text_words)
 
@@ -335,7 +332,11 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None)
 
             # Skip if there are no anntations
             if not annot:
-                f.write("\n- No annotations on this page\n")
+                # f.write("\n- No annotations on this page\n")
+                continue
+            else:
+                # Indicate page number
+                f.write("\n## Page {}\n".format(index))
                 
 
             while annot:
