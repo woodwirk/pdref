@@ -60,8 +60,15 @@ _You may need to (re)install `pyinstaller` for this to work appropriately._
 
 Change into `/pdref/` and execute the following:
 
+Windows
 ```
 pyinstaller gui.py --name="pdref" --windowed --icon=res/icon.ico --add-data="res/icon.ico;res"
+```
+
+Mac  
+Note: on Mac, you must have XCode command line installed (From terminal: `xcode-select --install`). This may take up 15 GB of space. This process has not been confirmed.
+```
+pyinstaller gui.py --name="pdref" --windowed --icon=res/icon.ico --add-data="res/icon.ico:res"
 ```
 
 ## Running from a pre-built executable
