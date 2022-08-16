@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import scrolledtext
 from crawl import crawl
+from datetime import datetime, timedelta
+from userpreferences import UserPreferences
 
 class MessageRedirector(object):
     def __init__(self, text_output):
@@ -48,7 +50,8 @@ def run():
         # Run
         bar_status.config(text = "Running...")
         root.update()
-        crawl(pdfs_path=refs_path, notes_path=notes_path, earliest_modified_date=earliest_modified_date)
+        preferences = UserPreferences(pdfs_path=refs_path, notes_path=notes_path, earliest_modified_date=earliest_modified_date)
+        crawl(preferences)
         bar_status.config(text = "Done!")
         show_output()
         return
@@ -59,6 +62,7 @@ if __name__ == '__main__':
     root.title('pdref')
     root.geometry('300x210+200+200')
     root.minsize(200, 160)
+    root.iconbitmap('res/icon.ico')
     root.columnconfigure(0,weight=1)
     
     # Set frames for layout
@@ -102,6 +106,11 @@ if __name__ == '__main__':
     label_date.grid(row = 3, column = 1, sticky=tk.EW)
     entry_date = tk.Entry(frame_paths)
     entry_date.grid(row=2, column=1, padx = 5, pady=5, sticky=tk.EW)
+    
+    # Configure date
+    set_date = datetime.today() - timedelta(days = 7)
+    set_date = set_date.__format__("%Y-%m-%d")
+    entry_date.insert(0, set_date)
 
     # Run options
     button_run = tk.Button(frame_run, text = 'Run', command = run, padx=10, pady=10)
@@ -113,7 +122,7 @@ if __name__ == '__main__':
     sys.stdout = MessageRedirector(scrolledtext_console)
 
     # Bottom info
-    bar_status = tk.Label(frame_info, text=(f"pdref v0.1.0"), bd=1, relief=tk.SUNKEN, anchor='w')
+    bar_status = tk.Label(frame_info, text=(f"pdref v0.1.2"), bd=1, relief=tk.SUNKEN, anchor='w')
     bar_status.grid(sticky=(tk.S, tk.EW))
 
     # Run GUI

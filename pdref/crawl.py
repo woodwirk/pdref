@@ -4,7 +4,11 @@ from datetime import datetime
 import text_utils
 from parse import process_pdf
 
-def prepare_pdf(path_to_pdf, slugified_title, notes_path, image_size):
+def prepare_pdf(path_to_pdf, slugified_title, preferences):
+    notes_path = preferences.notes_path
+    image_size = preferences.image_size
+    debug = preferences.debug
+
     print(path_to_pdf)
     path_to_notes = os.path.join(notes_path, slugified_title)
     if (not os.path.exists(path_to_notes)):
@@ -14,10 +18,14 @@ def prepare_pdf(path_to_pdf, slugified_title, notes_path, image_size):
     if (not os.path.exists(path_to_pdf_copy)):
         shutil.copy(path_to_pdf, path_to_pdf_copy)
     
-    process_pdf(path_to_pdf=path_to_pdf, path_to_pdf_copy = path_to_pdf_copy, path_to_notes = path_to_notes, image_size = image_size)
+    process_pdf(path_to_pdf=path_to_pdf, path_to_pdf_copy = path_to_pdf_copy, path_to_notes = path_to_notes, image_size = image_size, debug = debug)
 
-def crawl(pdfs_path, notes_path, earliest_modified_date = None, image_size = None):
+def crawl(preferences):
     # Both paths should exist before proceeding
+    notes_path = preferences.notes_path
+    pdfs_path = preferences.pdfs_path
+    earliest_modified_date = preferences.earliest_modified_date
+
     if (not os.path.exists(notes_path)):
         os.mkdir(notes_path)
 
@@ -38,6 +46,6 @@ def crawl(pdfs_path, notes_path, earliest_modified_date = None, image_size = Non
 
                     if earliest_modified_date is not None:
                         if datetime.fromtimestamp(os.stat(path_to_pdf).st_mtime) > earliest_modified_date:
-                            prepare_pdf(path_to_pdf, slugified_title, notes_path, image_size)
+                            prepare_pdf(path_to_pdf, slugified_title, preferences)
                     else:
-                        prepare_pdf(path_to_pdf, slugified_title, notes_path, image_size)
+                        prepare_pdf(path_to_pdf, slugified_title, preferences)

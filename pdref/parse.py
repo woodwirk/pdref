@@ -1,7 +1,6 @@
 from operator import itemgetter
 from itertools import groupby
 import os
-import re
 from datetime import datetime
 import fitz
 from bisect import bisect_left, bisect_right
@@ -218,7 +217,7 @@ def make_text(words):
     return " ".join([" ".join(line[1]) for line in lines])
 
 
-def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None):
+def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None, debug = False):
     doc = fitz.open(path_to_pdf)
     # if not image_size:
     #     image_size = 500*500
@@ -254,16 +253,18 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None)
             pages = [ doc[ i ] for i in range( doc.pageCount ) ]
 
             for index, page in enumerate(pages, start=1):
-
-                # Indicate page number
-                f.write("\n## Page {}\n".format(index))
+                images = doc.getPageImageList(index-1)
+                if images:
+                    # Indicate page number
+                    f.write("\n## Page {}\n".format(index))
 
                 # Save and reference images
-                for img in doc.getPageImageList(index-1):
+                for img in images:
                     try:
                         xref = img[0]
                         pix = fitz.Pixmap(doc, xref)
-                        f.writelines(text_utils.debug_image_text(pix))
+                        if debug:
+                            f.writelines(text_utils.debug_image_text(pix))
                         # if (pix.size < image_size):
                         #     # The image is too small to be considered a figure
                         #     f.writelines(["\n", "**Skip**", "\n"])
@@ -281,7 +282,8 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None)
                         pix = None
                         f.writelines(["\n", "[![](", markdown_reference, ")](",markdown_reference,")" "\n"])
                     except:
-                        print(f"There was a problem saving an image")
+                        # print(f"There was a problem saving an image")
+                        pass
 
     # Check for notes directory
     path_to_notes_dir = os.path.join(path_to_notes, "notes")
@@ -332,19 +334,15 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None)
 
             # Skip if there are no anntations
             if not annot:
-                # f.write("\n- No annotations on this page\n")
                 continue
             else:
                 # Indicate page number
                 f.write("\n## Page {}\n".format(index))
                 
 
-            while annot:
-                # Debug annotation type
-                # f.write(''.join(["\ntype: ", str(annot.type[0])]))
-                
-                # Text annotation
-                if annot.type[0] == 0:
+            while annot:                
+                # Text annotation (comment), Free text
+                if annot.type[0] in (0, 2):
                     text = "\n- %s" % (annot.info['content'])
                     f.write(text)
 
