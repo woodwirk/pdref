@@ -105,3 +105,6 @@ pyinstaller gui.py --name="pdref" --windowed --icon=res/icon.ico --add-data="res
 
 # Issues
 PyMuPDF 1296 (from an earlier version; running macOS Sierra 10.12.6)
+  - 20221219 - One solution is to use an earlier version of PyMuPDF (<1.18.15 -- [https://github.com/pymupdf/PyMuPDF/discussions/1302](https://github.com/pymupdf/PyMuPDF/discussions/1302))
+  - ~~TODO: Confirm whether reverting to a previous version would cause breaking changes~~
+  - Using 1.18.14 and Python 3.9 functions on macOS as early as 10.12.6
