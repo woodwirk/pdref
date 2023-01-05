@@ -2,7 +2,7 @@ name: pdref
 channels:
   - defaults
 dependencies:
-  - python=3.9
+  - python=3.10
   - pip
   - pip:
-    - pymupdf==1.18.14
+    - pymupdf==1.21.1
