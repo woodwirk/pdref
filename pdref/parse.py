@@ -250,10 +250,10 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None,
             f.writelines(notes_frontmatter)
             f.writelines(f"\n\n[PDF]({os.path.basename(path_to_pdf_copy)})\n")
 
-            pages = [ doc[ i ] for i in range( doc.pageCount ) ]
+            pages = [ doc[ i ] for i in range( doc.page_count ) ]
 
             for index, page in enumerate(pages, start=1):
-                images = doc.getPageImageList(index-1)
+                images = doc.get_page_images(index-1)
                 if images:
                     # Indicate page number
                     f.write("\n## Page {}\n".format(index))
@@ -274,10 +274,10 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None,
                         image_path = os.path.join(path_to_notes, image_name)
                         markdown_reference = "/".join([image_name])
                         if pix.colorspace.name in [fitz.csRGB.name, fitz.csGRAY.name]:       # this is GRAY or RGB
-                            pix.writePNG(image_path)
+                            pix.save(image_path)
                         elif pix.colorspace.name in [fitz.csCMYK.name]:               # CMYK: convert to RGB first
                             pix1 = fitz.Pixmap(fitz.csRGB, pix)
-                            pix1.writePNG(image_path)
+                            pix1.save(image_path)
                             pix1 = None
                         pix = None
                         f.writelines(["\n", "[![](", markdown_reference, ")](",markdown_reference,")" "\n"])
@@ -312,11 +312,11 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None,
     with open(notes_path, "a", encoding='utf-8') as f:
         f.writelines(["\n\n", "# ", datetime.now().strftime("%Y%m%d %H:%M:%S"), "\n\n"])
 
-        pages = [ doc[ i ] for i in range( doc.pageCount ) ]
+        pages = [ doc[ i ] for i in range( doc.page_count ) ]
 
         for index, page in enumerate(pages, start=1):
 
-            text_words = page.getTextWords()
+            text_words = page.get_text_words()
         #   print(text_words)
 
             # The words should be ordered by y1 and x0
@@ -330,7 +330,7 @@ def process_pdf(path_to_pdf, path_to_pdf_copy, path_to_notes, image_size = None,
             lines = groupby( sorted_words, key = itemgetter( 3 ) )
 
             # Get annotations
-            annot = page.firstAnnot
+            annot = page.first_annot
 
             # Skip if there are no anntations
             if not annot:
